@@ -5,7 +5,7 @@ import './map.css';
 import { onMapLoad, style } from './MainMap';
 
 export default function MapContainer(props) {
-  const {mapCenter,setMapCenter,gj,setLayerData} = props;
+  const {mapCenter,mapZoom,baseHeight,topHeight} = props;
   const containerRef = useRef(null);
   const mapRef = useRef(null);
 
@@ -16,13 +16,20 @@ export default function MapContainer(props) {
     mapRef.current = new maplibregl.Map({
         style: style,
         container: containerRef.current,
-        center: [10.20786,56.15890], 
-        zoom: 9,
+        center: mapCenter, 
+        zoom: mapZoom,
         attributionControl: false// starting zoom
       });
 
-
-    onMapLoad({map:mapRef.current})
+    mapRef.current.on('load',()=>{
+      onMapLoad({
+        map:mapRef.current,
+        mapCenter:mapCenter,
+        baseHeight:baseHeight,
+        topHeight:topHeight
+      })
+    })
+    
 
   });
 
